@@ -1,16 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
+import { MatRippleModule } from '@angular/material/core';
 
-import { AppComponent } from './app.component';
+import { TsCardComponent } from './card/card.component';
+import { TsWindowService } from './window.service';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    AppComponent
+    TsCardComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    CommonModule,
+    MatRippleModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [TsWindowService],
+  entryComponents:[TsCardComponent],
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private injector: Injector) {
+  }
+
+  ngDoBootstrap() {
+    const el = createCustomElement(TsCardComponent, { injector: this.injector });
+    customElements.define('ts-card', el);
+  }
+}
